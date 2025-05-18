@@ -1,9 +1,0 @@
-{
-  "extends": "@react-native/typescript-config/tsconfig.json",
-  "compilerOptions": {
-    "lib": ["DOM", "ES2015"],
-    "paths": {
-      "react-native-mmkv-storage": ["../dist/index"]
-    }
-  }
-}

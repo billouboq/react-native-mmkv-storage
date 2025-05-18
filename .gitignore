@@ -8,7 +8,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-  
+
 
 # Xcode
 #
@@ -31,7 +31,7 @@ DerivedData
 project.xcworkspace
 Pods
 vendor
-      
+
 
 # Android/IntelliJ
 #
@@ -47,4 +47,3 @@ local.properties
 buck-out/
 \.buckd/
 *.keystore
-dist
