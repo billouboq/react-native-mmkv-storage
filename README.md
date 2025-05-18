@@ -15,6 +15,12 @@
 </p>
 </div>
 
+## Version 0.11.8 Update
+This version includes fixes for React Native 0.77+ compatibility:
+- Fixed JSON access in native code to properly handle JSON as an object not a function
+- Updated JSON.stringify and JSON.parse calls to work with newer JSI APIs
+- Corrected the "getPropertyAsFunction" error when accessing JSON methods
+
 ## Version 0.11.7 Update
 This version includes fixes for React Native 0.77+ compatibility:
 - Fixed JSI API compatibility issues by updating String handling methods

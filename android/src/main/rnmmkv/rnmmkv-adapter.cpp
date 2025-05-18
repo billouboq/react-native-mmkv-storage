@@ -532,7 +532,8 @@ void installBindings(Runtime &jsiRuntime)
 
         // Convert the JavaScript object to JSON
         auto objectValue = arguments[1].asObject(runtime);
-        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, objectValue).asString(runtime);
 
         kv->set(jsonString.utf8(runtime), key);
@@ -572,7 +573,8 @@ void installBindings(Runtime &jsiRuntime)
         }
 
         // Parse the JSON string using JavaScript's JSON.parse
-        auto parseFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "parse");
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto parseFunc = jsonObject.getPropertyAsFunction(runtime, "parse");
         auto jsonValue = parseFunc.call(runtime, String::createFromUtf8(runtime, jsonString));
 
         return jsonValue;
@@ -605,7 +607,8 @@ void installBindings(Runtime &jsiRuntime)
 
         // Convert the JavaScript array to JSON
         auto arrayValue = arguments[1].asObject(runtime).asArray(runtime);
-        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, arrayValue).asString(runtime);
 
         kv->set(jsonString.utf8(runtime), key);
