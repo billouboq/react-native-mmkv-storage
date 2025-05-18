@@ -519,6 +519,26 @@ void installBindings(Runtime &jsiRuntime)
         return Value(true);
     });
 
+    CREATE_FUNCTION("setObjectMMKV", 3, {
+        MMKV *kv = getInstance(std_string(arguments[2]));
+        if (!kv)
+        {
+            return Value::undefined();
+        }
+
+        string key = std_string(arguments[0]);
+
+        setIndex(kv, "mapIndex", key);
+
+        // Convert the JavaScript object to JSON
+        auto objectValue = arguments[1].asObject(runtime);
+        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonString = stringifyFunc.call(runtime, objectValue).asString(runtime);
+
+        kv->set(std_string(jsonString), key);
+        return Value(true);
+    });
+
     CREATE_FUNCTION("getMapMMKV", 2, {
         MMKV *kv = getInstance(std_string(arguments[1]));
         if (!kv)
@@ -535,6 +555,29 @@ void installBindings(Runtime &jsiRuntime)
         return Value(runtime, String::createFromUtf8(runtime, result));
     });
 
+    CREATE_FUNCTION("getObjectMMKV", 2, {
+        MMKV *kv = getInstance(std_string(arguments[1]));
+        if (!kv)
+        {
+            return Value::undefined();
+        }
+
+        string key = std_string(arguments[0]);
+        string jsonString;
+        bool exists = kv->getString(key, jsonString);
+
+        if (!exists || jsonString.empty())
+        {
+            return Value::null();
+        }
+
+        // Parse the JSON string using JavaScript's JSON.parse
+        auto parseFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "parse");
+        auto jsonValue = parseFunc.call(runtime, String::createFromUtf8(runtime, jsonString));
+
+        return jsonValue;
+    });
+
     CREATE_FUNCTION("setArrayMMKV", 3, {
         MMKV *kv = getInstance(std_string(arguments[2]));
         if (!kv)
@@ -546,6 +589,26 @@ void installBindings(Runtime &jsiRuntime)
 
         setIndex(kv, "arrayIndex", key);
         kv->set(std_string(arguments[1]), key);
+        return Value(true);
+    });
+
+    CREATE_FUNCTION("setArrayObjectMMKV", 3, {
+        MMKV *kv = getInstance(std_string(arguments[2]));
+        if (!kv)
+        {
+            return Value::undefined();
+        }
+
+        string key = std_string(arguments[0]);
+
+        setIndex(kv, "arrayIndex", key);
+
+        // Convert the JavaScript array to JSON
+        auto arrayValue = arguments[1].asObject(runtime).asArray(runtime);
+        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonString = stringifyFunc.call(runtime, arrayValue).asString(runtime);
+
+        kv->set(std_string(jsonString), key);
         return Value(true);
     });
 

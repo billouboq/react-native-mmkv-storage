@@ -89,6 +89,12 @@ export type MMKVJsiModule = {
   setMapMMKV: (key: string, value: string, id: string) => boolean | undefined;
   getMapMMKV: (key: string, id: string) => string | null | undefined;
 
+  setObjectMMKV: (key: string, value: object, id: string) => boolean | undefined;
+
+  setArrayObjectMMKV: (key: string, value: any[], id: string) => boolean | undefined;
+
+  getObjectMMKV: (key: string, id: string) => object | null | undefined;
+
   setArrayMMKV: (key: string, value: string, id: string) => boolean | undefined;
   getArrayMMKV: (key: string, id: string) => string | null | undefined;
 

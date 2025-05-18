@@ -24,9 +24,9 @@
 </div>
 
 <div align="center">
-    
+
    <a href="https://rnmmkv.vercel.app/#/gettingstarted"><h3>Get Started with Documentation</h3></a>
-  
+
 </div>
 
 ## What it is
@@ -104,6 +104,45 @@ const App = () => {
 ```
 
 Learn more about `useIndex` hook it in the [docs](https://rnmmkv.vercel.app/#/useindex).
+
+### **Object Storage with Automatic Stringification**
+
+Starting from `v0.11.5`, the library provides dedicated methods for storing JavaScript objects with full native JSON handling:
+
+```js
+// Store an object with automatic JSON stringification on the native side
+storage.setObject('user', { name: 'John', age: 30, roles: ['admin', 'editor'] });
+
+// Retrieve the object with automatic JSON parsing on the native side
+const user = storage.getObject('user');
+console.log(user.name); // John
+
+// Async versions are also available
+await storage.setObjectAsync('settings', { theme: 'dark', notifications: true });
+const settings = await storage.getObjectAsync('settings');
+```
+
+This improves performance by handling both JSON stringification and parsing in native C++ code, which is especially beneficial for large objects.
+
+#### Universal Object/Array Handling
+
+The library now provides a unified API for storing both objects and arrays:
+
+```js
+// Store either an object or an array with automatic type detection
+storage.setUniversalObject('data', { name: 'John', scores: [95, 87, 92] });
+storage.setUniversalObject('scores', [95, 87, 92]);
+
+// Retrieve the data with the same API
+const data = storage.getUniversalObject('data');
+const scores = storage.getUniversalObject('scores');
+
+// Async versions are also available
+await storage.setUniversalObjectAsync('settings', { theme: 'dark' });
+const settings = await storage.getUniversalObjectAsync('settings');
+```
+
+This provides a simplified API when working with mixed data types.
 
 ### **Lifecycle Control with Transaction Manager**
 
