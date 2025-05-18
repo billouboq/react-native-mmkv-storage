@@ -1,33 +1,25 @@
-<div align="center">
-  <img src="https://i.imgur.com/P13HcId.png" />
-</div>
-
-#
+# React Native MMKV Storage
 
 <div align="center">
-    <p><a href="https://www.npmjs.com/package/react-native-mmkv-storage"><img src="https://img.shields.io/npm/v/react-native-mmkv-storage.svg?style=flat-square" alt=""></a>
-<a href="https://www.npmjs.com/package/react-native-mmkv-storage/blob/master/LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="License: MIT"></a>
-<a href="https://www.npmjs.com/package/react-native-mmkv-storage"><img src="https://img.shields.io/npm/dt/react-native-mmkv-storage?style=flat-square" alt=""></a>
-<a href="https://github.com/ammarahm-ed/react-native-mmkv-storage/actions/workflows/main.yml"><img src="https://github.com/ammarahm-ed/react-native-mmkv-storage/actions/workflows/main.yml/badge.svg" alt="Android"></a>
-<a href="https://github.com/ammarahm-ed/react-native-mmkv-storage/actions/workflows/ios.yml"><img src="https://github.com/ammarahm-ed/react-native-mmkv-storage/actions/workflows/ios.yml/badge.svg" alt="iOS"></a></p>
-
+  <a align="center" href="https://github.com/ammarahm-ed/react-native-mmkv-storage">
+    <img src="https://github.com/ammarahm-ed/react-native-mmkv-storage/blob/master/static/cover.png?raw=true" alt="react-native-mmkv-storage" />
+  </a>
+<p align="center" ><a href="https://twitter.com/ammarahmed_o">Twitter</a> &bull; <a  href="https://github.com/ammarahm-ed/react-native-mmkv-storage">Github</a> &bull; <a href="https://github.com/ammarahm-ed/react-native-mmkv-storage/blob/master/example/mmkv-storage-structure.svg">MMKV Internals</a></p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-native-mmkv-storage">
+    <img src="https://img.shields.io/npm/v/react-native-mmkv-storage?color=brightgreen">
+  </a>
+  <a href="https://www.npmjs.com/package/react-native-mmkv-storage">
+    <img src="https://img.shields.io/npm/dt/react-native-mmkv-storage">
+  </a>
+</p>
 </div>
 
-<div align="center">
-  <h3>Install the library</h3>
-  <pre>npm install react-native-mmkv-storage</pre>
-</div>
-
-<div align="center">
-  <h3>For expo bare workflow</h3>
-  <pre>expo prebuild</pre>
-</div>
-
-<div align="center">
-
-   <a href="https://rnmmkv.vercel.app/#/gettingstarted"><h3>Get Started with Documentation</h3></a>
-
-</div>
+## Version 0.11.7 Update
+This version includes fixes for React Native 0.77+ compatibility:
+- Fixed JSI API compatibility issues by updating String handling methods
+- Updated the code to work with newer JSI APIs that removed the getString() method
+- Object and array serialization/deserialization now works correctly with the new JSI API
 
 ## What it is
 

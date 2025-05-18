@@ -288,7 +288,7 @@ static void createFunc(Runtime &jsiRuntime, const char *prop, int paramCount, Na
     createFunc(jsiRuntime, prop, paramCount, [=](Runtime &runtime, const Value &thisValue, const Value *arguments, size_t count) -> Value { block })
 
 #define std_string(arg) \
-    arg.getString(runtime).utf8(runtime)
+    arg.asString(runtime).utf8(runtime)
 
 #define CALLBACK(returnValue) \
     invoker->invokeAsync([&runtime, cbref] { cbref->call(runtime, returnValue); });
@@ -535,7 +535,7 @@ void installBindings(Runtime &jsiRuntime)
         auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, objectValue).asString(runtime);
 
-        kv->set(std_string(jsonString), key);
+        kv->set(jsonString.utf8(runtime), key);
         return Value(true);
     });
 
@@ -608,7 +608,7 @@ void installBindings(Runtime &jsiRuntime)
         auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, arrayValue).asString(runtime);
 
-        kv->set(std_string(jsonString), key);
+        kv->set(jsonString.utf8(runtime), key);
         return Value(true);
     });
 
