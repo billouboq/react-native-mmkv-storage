@@ -494,9 +494,11 @@ static void install(jsi::Runtime &jsiRuntime) {
         auto objectValue = arguments[1].asObject(runtime);
         auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
         auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
-        auto jsonString = stringifyFunc.call(runtime, objectValue).asString(runtime);
+        auto jsonString = stringifyFunc.call(runtime, objectValue);
 
-        [kv setString:nsstring(jsonString) forKey:key];
+        // Convert the JSON string to NSString directly
+        NSString *jsonNSString = convertJSIStringToNSString(runtime, jsonString.asString(runtime));
+        [kv setString:jsonNSString forKey:key];
 
         return Value(true);
     });
@@ -562,9 +564,11 @@ static void install(jsi::Runtime &jsiRuntime) {
         auto arrayValue = arguments[1].asObject(runtime).asArray(runtime);
         auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
         auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
-        auto jsonString = stringifyFunc.call(runtime, arrayValue).asString(runtime);
+        auto jsonString = stringifyFunc.call(runtime, arrayValue);
 
-        [kv setString:nsstring(jsonString) forKey:key];
+        // Convert the JSON string to NSString directly
+        NSString *jsonNSString = convertJSIStringToNSString(runtime, jsonString.asString(runtime));
+        [kv setString:jsonNSString forKey:key];
 
         return Value(true);
     });
