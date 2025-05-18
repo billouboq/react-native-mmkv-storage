@@ -379,6 +379,34 @@ class MMKVInstance {
                 return null;
             }
         };
+        /**
+         * Retrieve multiple items for the given array of keys with native JSON parsing.
+         * This method uses native code for JSON parsing which is more efficient.
+         */
+        this.getMultipleItemsNative = (keys, type) => {
+            if (type === 'map')
+                type = 'object';
+            // For objects and arrays, we can use the native getMultiObjectMMKV which parses JSON in C++
+            if (type === 'object' || type === 'array') {
+                const result = (0, handlers_1.handleAction)(module_1.default.getMultiObjectMMKV, keys, this.instanceID);
+                return keys.map((key, index) => {
+                    let value = result[index];
+                    if (this.transactions.onread[type]) {
+                        value = this.transactions.transact(type, 'onread', key, value);
+                    }
+                    return [key, value];
+                });
+            }
+            // For other types, use the existing implementation
+            return this.getMultipleItems(keys, type);
+        };
+        /**
+         * Retrieve multiple items for the given array of keys with native JSON parsing asynchronously.
+         * This method uses native code for JSON parsing which is more efficient.
+         */
+        this.getMultipleItemsNativeAsync = (keys, type) => __awaiter(this, void 0, void 0, function* () {
+            return Promise.resolve(this.getMultipleItemsNative(keys, type));
+        });
         this.instanceID = id;
         this.encryption = new encryption_1.default(id);
         this.indexer = new indexer_1.default(id);

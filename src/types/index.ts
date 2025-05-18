@@ -59,61 +59,49 @@ export type GenericReturnType<T> = [key: string, value: T | null | undefined];
 
 export type IndexType = 'stringIndex' | 'boolIndex' | 'numberIndex' | 'mapIndex' | 'arrayIndex';
 
-export type MMKVJsiModule = {
+// Define the Indexer interface
+export interface Indexer {
+  [key: string]: any;
+}
+
+export interface MMKVJsiModule {
+  getMultiObjectMMKV: (keys: any, instanceID: string) => any;
+  clearMMKV: (instanceID: string) => any;
+  indexer: Indexer;
+  removeValuesMMKV: (keys: any, instanceID: string) => boolean;
+  setArrayMMKV: (key: string, value: string, instanceID: string) => boolean;
+  setArrayObjectMMKV: (key: string, value: any[], instanceID: string) => boolean;
+  getArrayMMKV: (key: string, instanceID: string) => string;
+  setMapMMKV: (key: string, value: string, instanceID: string) => boolean;
+  setObjectMMKV: (key: string, value: object, instanceID: string) => boolean;
+  getMapMMKV: (key: string, instanceID: string) => string;
+  getObjectMMKV: (key: string, instanceID: string) => any;
+  setStringMMKV: (key: string, value: string, instanceID: string) => boolean;
+  getStringMMKV: (key: string, instanceID: string) => string;
+  setMultiMMKV: (keys: any, values: any, dataType: string, instanceID: string) => boolean;
+  getMultiMMKV: (keys: any, instanceID: string) => any;
+  setNumberMMKV: (key: string, value: number, instanceID: string) => boolean;
+  getNumberMMKV: (key: string, instanceID: string) => number;
+  setBoolMMKV: (key: string, value: boolean, instanceID: string) => boolean;
+  getBoolMMKV: (key: string, instanceID: string) => boolean;
+  containsKeyMMKV: (key: string, instanceID: string) => boolean;
+  removeValueMMKV: (key: string, instanceID: string) => boolean;
+  initializeMMKV: () => undefined;
   setupMMKVInstance: (
     id: string,
-    mode?: number,
-    cryptKey?: string,
-    path?: string,
-    indexing?: boolean
+    mode: number,
+    cryptKey: string,
+    path: string,
+    accessibleOnly: boolean
   ) => boolean;
-
-  setMMKVServiceName: (alias: string, serviceName: string) => string;
-  getSecureKey: (alias: string) => string | null;
-  setSecureKey: (alias: string, key: string, accessibleMode: string) => boolean;
+  clearMemoryCache: (instanceID: string) => any;
+  getAllKeysMMKV: (instanceID: string) => any;
+  getIndexMMKV: (index: string, instanceID: string) => string[];
+  getSecureKey: (alias: string) => string;
+  setSecureKey: (alias: string, key: string, accessibleMode?: string) => any;
+  setMMKVServiceName?: (alias: string, serviceName: string) => any;
   secureKeyExists: (alias: string) => boolean;
   removeSecureKey: (alias: string) => boolean;
-
-  setMultiMMKV: (
-    key: string[],
-    value: string[],
-    type: string,
-    id: string
-  ) => Promise<boolean | undefined>;
-
-  getMultiMMKV: (keys: string[], id: string) => Promise<string[]>;
-
-  setStringMMKV: (key: string, value: string, id: string) => boolean | undefined;
-  getStringMMKV: (key: string, id: string) => string | null | undefined;
-
-  setMapMMKV: (key: string, value: string, id: string) => boolean | undefined;
-  getMapMMKV: (key: string, id: string) => string | null | undefined;
-
-  setObjectMMKV: (key: string, value: object, id: string) => boolean | undefined;
-
-  setArrayObjectMMKV: (key: string, value: any[], id: string) => boolean | undefined;
-
-  getObjectMMKV: (key: string, id: string) => object | null | undefined;
-
-  setArrayMMKV: (key: string, value: string, id: string) => boolean | undefined;
-  getArrayMMKV: (key: string, id: string) => string | null | undefined;
-
-  setNumberMMKV: (key: string, value: number, id: string) => boolean | undefined;
-  getNumberMMKV: (key: string, id: string) => number | null | undefined;
-
-  setBoolMMKV: (key: string, value: boolean, id: string) => boolean | undefined;
-  getBoolMMKV: (key: string, id: string) => boolean | null | undefined;
-
-  removeValueMMKV: (key: string, id: string) => boolean | undefined;
-  removeValuesMMKV: (...keys: string[]) => boolean | undefined;
-
-  getAllKeysMMKV: (id: string) => string[] | undefined;
-  getIndexMMKV: (type: IndexType, id: string) => string[] | undefined;
-  containsKeyMMKV: (key: string, id: string) => boolean | undefined;
-
-  clearMMKV: (id: string) => boolean | undefined;
-  clearMemoryCache: (id: string) => boolean | undefined;
-
-  encryptMMKV: (cryptKey: string, id: string) => boolean | undefined;
-  decryptMMKV: (id: string) => boolean | undefined;
-};
+  encryptMMKV: (cryptkey: string, instanceID: string) => boolean;
+  decryptMMKV: (instanceID: string) => boolean;
+}

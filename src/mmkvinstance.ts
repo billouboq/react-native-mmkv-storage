@@ -817,4 +817,40 @@ export default class MMKVInstance {
       resolve(this.getUniversalObject<T>(key));
     });
   }
+
+  /**
+   * Retrieve multiple items for the given array of keys with native JSON parsing.
+   * This method uses native code for JSON parsing which is more efficient.
+   */
+  getMultipleItemsNative = <T>(keys: string[], type: DataType | 'map'): [string, T][] => {
+    if (type === 'map') type = 'object';
+
+    // For objects and arrays, we can use the native getMultiObjectMMKV which parses JSON in C++
+    if (type === 'object' || type === 'array') {
+      const result = handleAction(mmkvJsiModule.getMultiObjectMMKV, keys, this.instanceID);
+      return keys.map((key, index) => {
+        let value = result[index] as unknown as T;
+
+        if (this.transactions.onread[type as DataType]) {
+          value = this.transactions.transact(type as DataType, 'onread', key, value) as T;
+        }
+
+        return [key, value];
+      });
+    }
+
+    // For other types, use the existing implementation
+    return this.getMultipleItems<T>(keys, type);
+  };
+
+  /**
+   * Retrieve multiple items for the given array of keys with native JSON parsing asynchronously.
+   * This method uses native code for JSON parsing which is more efficient.
+   */
+  getMultipleItemsNativeAsync = async <T>(
+    keys: string[],
+    type: DataType | 'map'
+  ): Promise<[string, T][]> => {
+    return Promise.resolve(this.getMultipleItemsNative<T>(keys, type));
+  };
 }

@@ -505,6 +505,46 @@ void installBindings(Runtime &jsiRuntime)
         return values;
     });
 
+    CREATE_FUNCTION("getMultiObjectMMKV", 2, {
+        auto keys = arguments[0].getObject(runtime).asArray(runtime);
+        auto kvName = std_string(arguments[1]);
+        auto kv = getInstance(kvName);
+        auto size = keys.length(runtime);
+
+        jsi::Array values = jsi::Array(runtime, size);
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto parseFunc = jsonObject.getPropertyAsFunction(runtime, "parse");
+
+        for (int i = 0; i < size; i++)
+        {
+            auto key = std_string(keys.getValueAtIndex(runtime, i));
+            if (kv->containsKey(key))
+            {
+                std::string jsonString;
+                kv->getString(key, jsonString);
+
+                if (!jsonString.empty()) {
+                    // Try to parse the JSON string, but handle safely any parsing errors
+                    try {
+                        auto jsonValue = parseFunc.call(runtime, String::createFromUtf8(runtime, jsonString));
+                        values.setValueAtIndex(runtime, i, jsonValue);
+                    } catch (...) {
+                        // If parsing fails, return the raw string
+                        values.setValueAtIndex(runtime, i, String::createFromUtf8(runtime, jsonString));
+                    }
+                } else {
+                    values.setValueAtIndex(runtime, i, jsi::Value::null());
+                }
+            }
+            else
+            {
+                values.setValueAtIndex(runtime, i, jsi::Value::null());
+            }
+        }
+
+        return values;
+    });
+
     CREATE_FUNCTION("setMapMMKV", 3, {
         MMKV *kv = getInstance(std_string(arguments[2]));
         if (!kv)

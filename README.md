@@ -15,6 +15,13 @@
 </p>
 </div>
 
+## Version 0.11.9 Update
+This version adds native JSON parsing for multiple items retrieval:
+- Added `getMultiObjectMMKV` native function for parsing JSON in C++ for multiple keys at once
+- Added `getMultipleItemsNative` and `getMultipleItemsNativeAsync` methods that use native parsing
+- Improves performance when retrieving large collections of objects from storage
+- Handles JSON parsing errors gracefully by returning the raw string when parsing fails
+
 ## Version 0.11.8 Update
 This version includes fixes for React Native 0.77+ compatibility:
 - Fixed JSON access in native code to properly handle JSON as an object not a function

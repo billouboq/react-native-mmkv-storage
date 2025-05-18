@@ -15,7 +15,7 @@ export default class indexer {
      * Get all keys from storage.
      *
      */
-    getKeys(): Promise<string[]>;
+    getKeys(): Promise<any>;
     /**
      * Check if a key exists in storage.
      */

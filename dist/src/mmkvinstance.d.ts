@@ -146,7 +146,7 @@ export default class MMKVInstance {
     /**
      * Remove all keys and values from storage.
      */
-    clearStore(): boolean;
+    clearStore(): any;
     /**
      * Get the key and alias for the encrypted storage
      */
@@ -157,7 +157,7 @@ export default class MMKVInstance {
     /**
      * Clear memory cache of the current MMKV instance
      */
-    clearMemoryCache(): boolean;
+    clearMemoryCache(): any;
     /**
      * Set an Object to storage for the given key.
      *
@@ -207,5 +207,15 @@ export default class MMKVInstance {
      * Async version of getUniversalObject
      */
     getUniversalObjectAsync<T>(key: string): Promise<T | null | undefined>;
+    /**
+     * Retrieve multiple items for the given array of keys with native JSON parsing.
+     * This method uses native code for JSON parsing which is more efficient.
+     */
+    getMultipleItemsNative: <T>(keys: string[], type: DataType | "map") => [string, T][];
+    /**
+     * Retrieve multiple items for the given array of keys with native JSON parsing asynchronously.
+     * This method uses native code for JSON parsing which is more efficient.
+     */
+    getMultipleItemsNativeAsync: <T>(keys: string[], type: DataType | "map") => Promise<[string, T][]>;
 }
 //# sourceMappingURL=mmkvinstance.d.ts.map
