@@ -15,6 +15,13 @@
 </p>
 </div>
 
+## Version 0.11.10 Update
+This version fixes iOS compatibility with React Native 0.77+:
+- Updated iOS implementation to use `asString()` instead of `getString()`
+- Fixed JSON object and array handling on iOS
+- Added `getMultiObjectMMKV` native function for iOS
+- Ensures consistent API between iOS and Android for native JSON parsing
+
 ## Version 0.11.9 Update
 This version adds native JSON parsing for multiple items retrieval:
 - Added `getMultiObjectMMKV` native function for parsing JSON in C++ for multiple keys at once

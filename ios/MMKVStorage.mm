@@ -25,7 +25,7 @@ body    \
 })
 
 #define nsstring(arg) \
-convertJSIStringToNSString(runtime, arg.getString(runtime))
+convertJSIStringToNSString(runtime, arg.asString(runtime))
 
 @implementation MMKVStorage
 @synthesize bridge = _bridge;
@@ -417,6 +417,41 @@ static void install(jsi::Runtime &jsiRuntime) {
 
     });
 
+    CreateFunction(jsiRuntime, "getMultiObjectMMKV", 2, [=](Runtime &runtime, const Value &thisValue, const Value *arguments, size_t count) -> Value {
+        auto keys = arguments[0].getObject(runtime).asArray(runtime);
+        auto kvName = nsstring(arguments[1]);
+        auto size = keys.length(runtime);
+        MMKV *kv = getInstance(kvName);
+
+        jsi::Array values = jsi::Array(runtime, size);
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto parseFunc = jsonObject.getPropertyAsFunction(runtime, "parse");
+
+        for (int i=0; i < size; i++) {
+            NSString *key = convertJSIStringToNSString(runtime, keys.getValueAtIndex(runtime, i).asString(runtime));
+            if ([kv containsKey:key]) {
+                NSString *jsonString = [kv getStringForKey:key];
+
+                if (jsonString && jsonString.length > 0) {
+                    // Try to parse the JSON string, but handle safely any parsing errors
+                    try {
+                        auto jsonValue = parseFunc.call(runtime, convertNSStringToJSIString(runtime, jsonString));
+                        values.setValueAtIndex(runtime, i, jsonValue);
+                    } catch (...) {
+                        // If parsing fails, return the raw string
+                        values.setValueAtIndex(runtime, i, convertNSStringToJSIString(runtime, jsonString));
+                    }
+                } else {
+                    values.setValueAtIndex(runtime, i, jsi::Value::null());
+                }
+            } else {
+                values.setValueAtIndex(runtime, i, jsi::Value::null());
+            }
+        }
+
+        return values;
+    });
+
     CREATE_FUNCTION("getStringMMKV", 2, {
         MMKV *kv = getInstance(nsstring(arguments[1]));
 
@@ -457,7 +492,8 @@ static void install(jsi::Runtime &jsiRuntime) {
 
         // Convert the JavaScript object to JSON
         auto objectValue = arguments[1].asObject(runtime);
-        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, objectValue).asString(runtime);
 
         [kv setString:nsstring(jsonString) forKey:key];
@@ -490,7 +526,8 @@ static void install(jsi::Runtime &jsiRuntime) {
             NSString *jsonString = [kv getStringForKey:key];
             if (jsonString) {
                 // Parse the JSON string
-                auto parseFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "parse");
+                auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+                auto parseFunc = jsonObject.getPropertyAsFunction(runtime, "parse");
                 auto jsonValue = parseFunc.call(runtime, convertNSStringToJSIString(runtime, jsonString));
                 return jsonValue;
             }
@@ -523,7 +560,8 @@ static void install(jsi::Runtime &jsiRuntime) {
 
         // Convert the JavaScript array to JSON
         auto arrayValue = arguments[1].asObject(runtime).asArray(runtime);
-        auto stringifyFunc = runtime.global().getPropertyAsFunction(runtime, "JSON").getPropertyAsFunction(runtime, "stringify");
+        auto jsonObject = runtime.global().getProperty(runtime, "JSON").asObject(runtime);
+        auto stringifyFunc = jsonObject.getPropertyAsFunction(runtime, "stringify");
         auto jsonString = stringifyFunc.call(runtime, arrayValue).asString(runtime);
 
         [kv setString:nsstring(jsonString) forKey:key];
